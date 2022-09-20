@@ -1,3 +1,5 @@
+# Completed by A. Gorsky & L. Platt, 9/20/2022
+
 # dplyr/tidyverse homework
 library(tidyverse)
 
