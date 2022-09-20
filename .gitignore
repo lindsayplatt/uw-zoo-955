@@ -38,3 +38,6 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Ignore data files, just keep those locally
+*.csv
