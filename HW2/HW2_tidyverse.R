@@ -151,7 +151,15 @@ library(nycflights13)
 # Q: Which airport (name) had the greatest number of arriving flights in 2013?
 # Atlanta (ATL) had the greatest number of arriving flights in 2013
 flights %>% 
-  filter(year == 2013, !is.na(arr_time)) %>% 
+  filter(!is.na(arr_time)) %>% 
+  left_join(select(airports, faa, name), by = c("dest" = "faa")) %>% 
+  group_by(name, dest) %>%
+  tally() %>% 
+  arrange(desc(n))
+
+# If we don't take into account flights with NA for arrival time, then
+# Chicago O'Hare has the greatest number
+flights %>%  
   left_join(select(airports, faa, name), by = c("dest" = "faa")) %>% 
   group_by(name, dest) %>%
   tally() %>% 
@@ -160,7 +168,7 @@ flights %>%
 # Q: Which airport (name) had the greatest number of delayed arriving flights?
 # Also Atlanta (ATL) here - has the greatest number of delayed flights
 flights %>% 
-  filter(year == 2013, !is.na(arr_delay)) %>% 
+  filter(!is.na(arr_delay)) %>% 
   left_join(select(airports, faa, name), by = c("dest" = "faa")) %>% 
   group_by(name, dest) %>%
   tally() %>% 
