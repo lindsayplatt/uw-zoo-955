@@ -52,10 +52,9 @@ iris_means <- iris %>%
 
 ## On Your Own #1 
 # now compute mean petal area for each species - how would you go about it using dplyr
-iris_mean_area <- iris %>% 
-  mutate(Petal.Area = Petal.Width * Petal.Length) %>% 
+iris_mean_area <- iris_area %>% 
   group_by(Species) %>% 
-  summarize(mn.petal.area = mean(Petal.Area))
+  summarize(mn.petal.area = mean(petal.area))
 
 # Q: What is the mean petal area for each species
 # Species    mn.petal.area
@@ -74,13 +73,30 @@ iris_size <-
 
 # On Your Own #2
 # do the same for the other measurements (i.e. petal.width, sepal.length, etc)
-iris %>% 
+# Q: What is the mean petal and sepal lengths and widths for each species
+iris_mean_measurements <- iris %>% 
   # Tidy-er data format by pivoting
   pivot_longer(cols = -Species, names_to = 'Measurement', values_to = 'Value') %>% 
   # Find means for each Species first
   group_by(Measurement, Species) %>% 
-  summarize(mean_value = mean(Value)) %>% 
-  # Now determine which species has the biggest mean
+  summarize(mean_value = mean(Value))
+
+# Measurement  Species    mean_value
+# Petal.Length setosa          1.46 
+# Petal.Length versicolor      4.26 
+# Petal.Length virginica       5.55 
+# Petal.Width  setosa          0.246
+# Petal.Width  versicolor      1.33 
+# Petal.Width  virginica       2.03 
+# Sepal.Length setosa          5.01 
+# Sepal.Length versicolor      5.94 
+# Sepal.Length virginica       6.59 
+# Sepal.Width  setosa          3.43 
+# Sepal.Width  versicolor      2.77 
+# Sepal.Width  virginica       2.97 
+
+# Now determine which species has the biggest mean
+iris_mean_measurements %>%
   group_by(Measurement) %>% 
   summarize(
     biggest_value = max(mean_value),
@@ -88,7 +104,6 @@ iris %>%
     biggest_value_species = Species[which.max(mean_value)]) %>% 
   select(Measurement, biggest_value_species, biggest_value)
 
-# Q: What is the mean petal and sepal lengths and widths for each species
 # Measurement  biggest_value_species biggest_value
 # Petal.Length virginica                      5.55
 # Petal.Width  virginica                      2.03
